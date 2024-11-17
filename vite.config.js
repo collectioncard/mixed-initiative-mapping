@@ -1,18 +1,17 @@
 import { defineConfig } from "vite";
 
 export default defineConfig({
+  server: {
+    proxy: {
+      '/api': {
+        target: 'http://localhost:1234/v1/', // Backend URL
+        changeOrigin: true, // Adjust the origin header for CORS
+        rewrite: (path) => path.replace(/^\/api/, ''), // Removes '/api' prefix before forwarding
+      },
+    },
+  },
   plugins: [
-    /**
-     * We're using `SharedArrayBuffer`s in our code,
-     * which requires either HTTPS or localhost, and it requires cross origin isolation.
-     * So we're enabling the CORS headers here for development mode.
-     *
-     * Do note that your production server will need HTTPS and CORS headers set up correctly.
-     * If you cannot control the HTTP headers that your production server sends back (like on GitHub pages),
-     * then there's a workaround using a service worker. See https://dev.to/stefnotch/enabling-coop-coep-without-touching-the-server-2d3n
-     */
     {
-      // Plugin code is from https://github.com/chaosprint/vite-plugin-cross-origin-isolation
       name: "configure-response-headers",
       configureServer: (server) => {
         server.middlewares.use((_req, res, next) => {
