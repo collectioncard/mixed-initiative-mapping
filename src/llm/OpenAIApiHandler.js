@@ -36,11 +36,11 @@ export class OpenAIApiHandler {
                 }
             }
             this.conversationHistory.push({ role: "assistant", content: botResponse.substring(9) });
-        }).then(() => {
-          document.dispatchEvent(new CustomEvent('responseEnd'));
         }).catch((error) => {
-            responseField.textContent = marked.parse('**Bot:** Sorry, I was unable to generate an answer to that. Please try again.');
+            responseField.innerHTML = marked.parse('**Bot:** Sorry, I was unable to generate an answer to that. Please try again.');
             console.error(error);
+        }).then(() => {
+            document.dispatchEvent(new CustomEvent('responseEnd'));
         });
     }
 
