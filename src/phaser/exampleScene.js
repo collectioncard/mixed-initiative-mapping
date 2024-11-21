@@ -31,6 +31,30 @@ class ExampleScene extends Phaser.Scene {
     // Camera settings
     this.cameras.main.setBounds(0, 0, this.map.widthInPixels, this.map.heightInPixels);
     this.cameras.main.setZoom(this.SCALE);
+
+    document.dispatchEvent(new CustomEvent('mapUpdated', {detail: this.layersToGrid()}));
+  }
+
+  layersToGrid() {
+    let grid = [];
+
+    for(let i = 0; i < this.map.height; i++) {
+      grid[i] = [];
+    }
+
+    for (let i = 0; i < this.map.layers.length; i++) {
+
+      let data = this.map.layers[i].data;
+      for (let j = 0; j < data.length; j++) {
+        for (let k = 0; k < data[j].length; k++) {
+          if (data[j][k] != null && data[j][k].index !== -1) {
+            grid[j][k] = data[j][k].index;
+          }
+        }
+      }
+    }
+    console.log(grid);
+    return grid;
   }
 
 }
