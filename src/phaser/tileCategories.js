@@ -2,39 +2,39 @@ const tilecategories = {
     1: "ground",
     2: "ground",
     3: "ground",
-    4: "plantlife", //tree
-    5: "plantlife", //tree
-    6: "plantlife", //shrub
-    7: "plantlife", //shrub
-    8: "plantlife", //shrub
-    9: "plantlife", //shrub
-    10: "plantlife", //shrub
-    11: "plantlife", //shrub
-    12: "plantlife", //shrub
+    4: "tree",
+    5: "tree", //tree
+    6: "shrub", //shrub
+    7: "shrub", //shrub
+    8: "shrub", //shrub
+    9: "shrub", //shrub
+    10: "shrub", //shrub
+    11: "shrub", //shrub
+    12: "shrub", //shrub
     13: "path",
     14: "path",
     15: "path",
-    16: "plantlife", //tree
-    17: "plantlife", //tree
-    18: "plantlife", //plant
-    19: "plantlife", //shrub
-    20: "plantlife", // shrub
-    21: "plantlife", //shrub
-    22: "plantlife", //shrub
-    23: "plantlife", //shrub
-    24: "plantlife", //shrub
+    16: "tree", //tree
+    17: "tree", //tree
+    18: "plant", //plant
+    19: "shrub", //shrub
+    20: "shrub", // shrub
+    21: "shrub", //shrub
+    22: "shrub", //shrub
+    23: "shrub", //shrub
+    24: "shrub", //shrub
     25: "path",
     26: "path",
     27: "path",
-    28: "plantlife", //shrub
-    29: "plantlife", //shrub
-    30: "plantlife", //plant
-    31: "plantlife", //shrub
-    32: "plantlife", //shrub
-    33: "plantlife", //shrub
-    34: "plantlife", //shrub
-    35: "plantlife", //shrub
-    36: "plantlife", //shrub
+    28: "shrub", //shrub
+    29: "shrub", //shrub
+    30: "plant", //plant
+    31: "shrub", //shrub
+    32: "shrub", //shrub
+    33: "shrub", //shrub
+    34: "shrub", //shrub
+    35: "shrub", //shrub
+    36: "shrub", //shrub
     37: "path",
     38: "path",
     39: "path",
@@ -132,4 +132,18 @@ const tilecategories = {
     131: "object",
     132: "object"
 }
+const placeHolderTiles = {
+    "ground": 1,
+    "tree": 17,
+    "shrub": 20,
+    "path": 26,
+    "plant": 18,
+    "fence": 46,
+    "house roof": 49,
+    "house" : 73,
+    "object": 58,
+    "castle roof": 97,
+    "castle wall": 127
+}
+
 export {tilecategories};
