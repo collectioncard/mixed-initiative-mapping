@@ -41,11 +41,30 @@ const mapArr =
     "Row 24: [1,1,1,2,1,2,2,3,2,1,3,1,2,2,3,2,1,2,1,1,2,1,1,2,1,1,1,2,1,2,2,2,1,2,3,2,2,1,2,2]\n" +
     "Row 25: [2,3,1,1,2,2,1,1,1,1,2,1,2,1,2,2,2,2,3,2,1,1,2,2,1,3,2,1,3,2,1,2,1,1,1,1,2,2,2,1]"
 
-
+const tools = [
+    {
+        "type": "function",
+        "function": {
+            "name": "get_first_tile_index",
+            "description": "Gets the first location of a tile in the tilemap.",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "tile_id": {
+                        "type": "string",
+                        "description": "The id of the tile to find.",
+                    },
+                },
+                "required": ["tile_id"],
+            },
+        }
+    }
+];
 
 
 export class OpenAIApiHandler {
-    constructor(botURL = "http://localhost:5173/api", apiKey = "None", modelName = "Qwen/Qwen2.5-Coder-7B-Instruct-GGUF") {
+    //TODO: make the url a secret file thing or something
+    constructor(botURL = "NOT_IN_REPO", apiKey = "None", modelName = "qwen2.5-7b-instruct") {
         this.openai = new OpenAI({
             apiKey: apiKey,
             baseURL: botURL,
@@ -70,7 +89,10 @@ export class OpenAIApiHandler {
         }
 
         // Add user message
-        this.conversationHistory.push({ role: "user", content: userMessage });
+        if (userMessage){
+            this.conversationHistory.push({ role: "user", content: userMessage });
+        }
+
 
         // Truncate conversation history if necessary
         if (this.conversationHistory.length > 50) {
@@ -81,21 +103,49 @@ export class OpenAIApiHandler {
         }
 
         document.dispatchEvent(new CustomEvent("responseStart"));
+        let toolName = "";
 
         this.openai.chat.completions.create({
             model: this.modelName,
             messages: this.conversationHistory,
+            tools: tools,
+            tool_choice: "auto",
             stream: true,
         }).then(async (stream) => {
             let botResponse = "**Bot:** ";
+            let toolArguments = "";
+            let currentTool = null;
+
             for await (const chunk of stream) {
+                console.log(chunk);
                 const content = chunk.choices[0]?.delta?.content || "";
+                const toolCall = chunk.choices[0]?.delta?.tool_calls?.[0];
+
+                // Handle tool call streaming
+                if (toolCall) {
+                    if (currentTool === null) {
+                        currentTool = toolCall.function.name;
+                    }
+                    toolArguments += toolCall.function.arguments || ""; 
+                }
+
+                // Handle content streaming
                 if (content) {
                     botResponse += content;
                     responseField.innerHTML = marked.parse(botResponse);
                 }
             }
-            this.conversationHistory.push({ role: "assistant", content: botResponse.substring(9) });
+
+            // Handle tool call completion
+            if (currentTool) {
+                toolName = currentTool;
+                this.conversationHistory.push({ role: "tool", content: "Tool Call: " + toolName + ", " + toolArguments });
+                this.handleToolCall({ name: toolName, arguments: toolArguments }, responseField);
+            }
+            if (botResponse.substring(9) !== "" ) {
+                this.conversationHistory.push({ role: "assistant", content: botResponse.substring(9) });
+            }
+
         }).catch((error) => {
             responseField.innerHTML = marked.parse("**Bot:** Sorry, I was unable to generate an answer to that. Please try again.");
             console.error(error);
@@ -118,6 +168,28 @@ export class OpenAIApiHandler {
 
         console.log(this.conversationHistory[0].content);
     }
+
+
+    handleToolCall(toolCall, responseField) {
+        try {
+            const args = JSON.parse(toolCall.arguments); // Parse the complete tool arguments
+            if (toolCall.name === "get_first_tile_index") {
+                const { tile_id} = args;
+                const dummyResponse = `first idx of tile ${tile_id} is Row 12, Column 14`;
+                this.conversationHistory.push({ role: "assistant", content: dummyResponse });
+                console.log(dummyResponse);
+                responseField.innerHTML = marked.parse(`**Bot:** ${dummyResponse}`);
+            } else {
+                throw new Error("Unsupported tool");
+            }
+        } catch (error) {
+            console.error("Error processing tool call:", error);
+            responseField.innerHTML = marked.parse("**Bot:** Failed to process tool call.");
+        }
+        console.log(this.conversationHistory);
+        //this.getMessageCompletion(null, responseField);
+    }
+
 }
 
 export default OpenAIApiHandler;
