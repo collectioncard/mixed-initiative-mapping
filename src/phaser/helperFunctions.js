@@ -37,6 +37,70 @@ const dataMap = {
 
 
 };
+
+export const tools = [
+    {
+        "type": "function",
+        "function": {
+            "name": "getFirstTileIndex",
+            "description": "Gets the first location of a tile in the tilemap.",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "tile_id": {
+                        "type": "string",
+                        "description": "The id of the tile to find."
+                    }
+                },
+                "required": ["tile_id"]
+            }
+        }
+    },
+    {
+        "type": "function",
+        "function": {
+            "name": "getSimplifiedMap",
+            "description": "Get the, hopefully, llm readable map as a 2D array.",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "location": {
+                        "type": "string",
+                        "description": "The city and state, e.g. San Francisco, CA"
+                    },
+                    "unit": {
+                        "type": "string",
+                        "enum": ["celsius", "fahrenheit"]
+                    }
+                },
+                "required": ["location"]
+            }
+        }
+    },
+    {
+        "type": "function",
+        "function": {
+            "name": "getTilesFromCategory",
+            "description": "Returns an array of the coordinates of all tiles of a given category name. The coordinates are strings in the form (x, y).",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "tileCategory": {
+                        "type": "string",
+                        "description": "The tile category name."
+                    }
+                },
+                "required": ["tileCategory"]
+            }
+        }
+    }
+];
+
+
+
+
+
+
 /*
  {
         "type": "function",
@@ -117,6 +181,20 @@ function getFacts(tileCat) {
 function getStringCoord(x, y){
     return `(${x+1},${y+1})`;
 }
+
+export function getFirstTileIndex(tileId) {
+    const tileIdNumber = Number(tileId);
+    console.log("looking for " + tileIdNumber);
+    for (let y = 0; y < dataMap.mapHeight; y++) {
+        for (let x = 0; x < dataMap.mapWidth; x++) {
+            if (dataMap.tileMap[y][x] === tileIdNumber) {
+                return getStringCoord(x, y);
+            }
+        }
+    }
+    return "Tile not found";
+}
+
 
 export {getSimplifiedMap};
 export { dataMap };

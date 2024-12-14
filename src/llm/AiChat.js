@@ -19,7 +19,7 @@ document.querySelector('#llm-chat-form').addEventListener('submit', function(eve
     llm.getMessageCompletion(userMessage, botResponseEntry);
 });
 
-function addChatMessage(sender, message) {
+export function addChatMessage(sender, message) {
     const messageItem = document.createElement('li');
     messageItem.innerHTML = `<strong>${sender}:</strong> ${message}`;
     messageItem.style.marginBottom = '10px';
