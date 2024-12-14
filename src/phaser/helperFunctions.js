@@ -247,7 +247,6 @@ export function getTileIndexes(tileId) {
 }
 
 makeSimplifiedMap();
-getTilesFromCategory("fence");
 
 export {getSimplifiedMap};
 export { dataMap };

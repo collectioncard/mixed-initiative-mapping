@@ -9,7 +9,8 @@ const baseSysPrompt =
     " the phaser game engine. Use the tools provided to assist the user in whatever they ask. ALWAYS try to keep your responses brief and to the point." +
     "NEVER provide the user with code as you should always feed it to the program. If you are unsure of what to do, ask the user for more information." +
     "The map of tiles to their IDs is as follows: \n" + JSON.stringify(tilesetmap) +
-    "Tile ID's are always numerical, categories can only be words, but a user might give a category that doesn't exist. If you don't find any tiles of a category, look for corresponding ID's.";
+    "Tile ID's are always numerical, categories can only be words, but a user might give a category that doesn't exist. If you don't find any tiles of a category, look for corresponding ID's."+
+    "our code is broken currently, so only ever make a single tool call at once.";
 
 let messageHistory = [
     {role: "system", content: baseSysPrompt}
@@ -42,7 +43,7 @@ export class OpenAIApiHandler {
             const stream = await this.client.chat.completions.create({
                 model: modelName,
                 messages: messageHistory,
-                tools: toolsEnabled ? tools : [],
+                tools: toolsEnabled ? tools : tools,
                 stream: true,
             });
 
@@ -73,7 +74,9 @@ export class OpenAIApiHandler {
                     }
                 }
             }
-
+            if (toolCalls.length > 0) {
+                messageHistory.push({role: "assistant", content: botResponse.substring(9), tool_calls: toolCalls});
+            }
             if (botResponse.substring(9) !== "") {
                 messageHistory.push({role: "assistant", content: botResponse.substring(9)});
             }
@@ -100,6 +103,7 @@ export class OpenAIApiHandler {
 
             this.handleToolCalls(toolCalls, response2);
         }
+        console.log(messageHistory);
         console.log("Final toolCalls:", toolCalls);
     }
 
