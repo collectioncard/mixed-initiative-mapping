@@ -59,6 +59,23 @@ export const tools = [
     {
         "type": "function",
         "function": {
+            "name": "getTileIndexes",
+            "description": "Gets the locations of a tile in the tilemap, based on tile id.",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "tile_id": {
+                        "type": "string",
+                        "description": "The id of the tile to find."
+                    }
+                },
+                "required": ["tile_id"]
+            }
+        }
+    },
+    {
+        "type": "function",
+        "function": {
             "name": "getSimplifiedMap",
             "description": "Get the, hopefully, llm readable map as a 2D array.",
             "parameters": {
@@ -175,9 +192,22 @@ export function getTilesFromCategory(tileCat) {
     return coords;
 }
 
+
 //Returns and array of arrays containing coords for each fact of the given type. E.g. if two trees are in the map, returns an array of length 2, each subarray contains the coords of each contiguous part of the tree.
 function getFacts(tileCat) {
-    
+    let simpMap = getSimplifiedMap();
+    for (let y = 0; y < dataMap.mapHeight; y++) {
+        for (let x = 0; x < dataMap.mapWidth; x++) {
+            if (simpMap[y][x] === tileCat) {
+
+            }
+        }
+    }
+}
+
+
+function factHelper() {
+
 }
 
 function getStringCoord(x, y){
@@ -197,6 +227,25 @@ export function getFirstTileIndex(tileId) {
     return "Tile not found";
 }
 
+export function getTileIndexes(tileId) {
+    const tileIdNumber = Number(tileId);
+    let coord = []
+    console.log("looking for all" + tileIdNumber);
+    for (let y = 0; y < dataMap.mapHeight; y++) {
+        for (let x = 0; x < dataMap.mapWidth; x++) {
+            if (dataMap.tileMap[y][x] === tileIdNumber) {
+                coord.push(getStringCoord(x, y));
+            }
+        }
+    }
+    if (coord.length > 0) {
+        return coord;
+    }
+    return "Tile not found";
+}
+
+makeSimplifiedMap();
+getTilesFromCategory("fence");
 
 export {getSimplifiedMap};
 export { dataMap };

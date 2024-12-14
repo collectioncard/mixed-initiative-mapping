@@ -1,6 +1,6 @@
 import OpenAI from "openai";
 import {marked} from "marked";
-import {tools, getFirstTileIndex, getTilesFromCategory} from "../phaser/helperFunctions.js";
+import {tools, getFirstTileIndex, getTilesFromCategory, getTileIndexes, getSimplifiedMap} from "../phaser/helperFunctions.js";
 import {addChatMessage} from "./AiChat.js";
 import {tilesetmap} from "../phaser/tilesetmap.js";
 
@@ -136,9 +136,17 @@ export class OpenAIApiHandler {
                     let tileIdex = args.tile_id;
                     response = getFirstTileIndex(tileIdex);
                     break;
+                case "getTileIndexes":
+                    let tileIdx = args.tile_id;
+                    response = getTileIndexes(tileIdx);
+                    break;
                 case "getTilesFromCategory":
                     let tileCat = args.tileCategory;
                     response = getTilesFromCategory(tileCat);
+                    break;
+                case "getSimplifiedMap":
+                    let result = JSON.stringify(getSimplifiedMap())
+                    response = result;
                     break;
                 default:
                     responseField.innerHTML = marked.parse("**Bot:** Sorry, I was unable to generate an answer to that. Please try again.outer");
