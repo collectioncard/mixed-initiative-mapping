@@ -160,16 +160,18 @@ function makeSimplifiedMap() {
         }
     }
 */
-function getTilesFromCategory(tileCat) {
+export function getTilesFromCategory(tileCat) {
+    let simpMap = getSimplifiedMap();
     let coords = [];
     for (let y = 0; y < dataMap.mapHeight; y++) {
         for (let x = 0; x < dataMap.mapWidth; x++) {
-            if (dataMap.simplifiedMap[y][x] === tileCat) {
+            if (simpMap[y][x] === tileCat) {
                 coords.push(getStringCoord(x, y));
             }
         }
     }
     console.log(coords);
+    
     return coords;
 }
 

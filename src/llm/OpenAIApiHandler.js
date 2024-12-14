@@ -1,6 +1,6 @@
 import OpenAI from "openai";
 import {marked} from "marked";
-import {tools, getFirstTileIndex} from "../phaser/helperFunctions.js";
+import {tools, getFirstTileIndex, getTilesFromCategory} from "../phaser/helperFunctions.js";
 import {addChatMessage} from "./AiChat.js";
 
 const baseSysPrompt =
@@ -132,6 +132,10 @@ export class OpenAIApiHandler {
                 case "getFirstTileIndex":
                     let tileIdex = args.tile_id;
                     response = getFirstTileIndex(tileIdex);
+                    break;
+                case "getTilesFromCategory":
+                    let tileCat = args.tileCategory;
+                    response = getTilesFromCategory(tileCat);
                     break;
                 default:
                     responseField.innerHTML = marked.parse("**Bot:** Sorry, I was unable to generate an answer to that. Please try again.outer");
