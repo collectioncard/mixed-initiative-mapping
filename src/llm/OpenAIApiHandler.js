@@ -2,10 +2,13 @@ import OpenAI from "openai";
 import {marked} from "marked";
 import {tools, getFirstTileIndex, getTilesFromCategory} from "../phaser/helperFunctions.js";
 import {addChatMessage} from "./AiChat.js";
+import {tilesetmap} from "../phaser/tilesetmap.js";
 
 const baseSysPrompt =
     "You are a helpful assistant designed to help create z3 constraints for a procedurally generated tile-based map in" +
-    " the phaser game engine. Use the tools provided to assist the user in whatever they ask. ALWAYS try to keep your responses brief and to the point. ";
+    " the phaser game engine. Use the tools provided to assist the user in whatever they ask. ALWAYS try to keep your responses brief and to the point." +
+    "NEVER provide the user with code as you should always feed it to the program. If you are unsure of what to do, ask the user for more information." +
+    "The map of tiles to their IDs is as follows: \n" + JSON.stringify(tilesetmap);
 
 let messageHistory = [
     {role: "system", content: baseSysPrompt}

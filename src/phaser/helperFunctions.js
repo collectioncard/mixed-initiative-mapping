@@ -171,7 +171,7 @@ export function getTilesFromCategory(tileCat) {
         }
     }
     console.log(coords);
-    
+
     return coords;
 }
 
