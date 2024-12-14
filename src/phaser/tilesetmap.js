@@ -129,7 +129,11 @@ const tilesetmap = {
     129: "shovel",
     130: "sickle",
     131: "bucket empty",
-    132: "bucket full"
+    132: "bucket full",
+
+    "categories": [
+        "ground", "tree", "shrub", "path", "fence", "house roof", "object", "house", "castle wall", "castle roof"
+    ]
 }
 
 export {tilesetmap};

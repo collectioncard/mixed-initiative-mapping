@@ -188,7 +188,9 @@ export function getTilesFromCategory(tileCat) {
         }
     }
     console.log(coords);
-
+    if (coords.length < 1){
+        return "No tiles found!";
+    }
     return coords;
 }
 
